@@ -1,40 +1,43 @@
 name: mantid setup basic workflow
 
 # Controls when the workflow will run
-on:
-  # By default runs on opened, synchronize (push) and reopened
-  pull_request:
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+on: push
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
     defaults:
       run:
-        #run in bash rather than sh
         shell: bash -l {0}
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out repo to comp that runs action (as opposed to v3, under $GITHUB_WORKSPACE)
       - name: Checkout mantidSetup
         uses: actions/checkout@v3
-
-      # Set up conda environnment
-      - name: Setup Miniconda
-        uses: conda-incubator/setup-miniconda@v2.2.0
         with:
-          miniforge-version: latest
-          miniforge-variant: Mambaforge
-          activate-environment: mantid-setup
-          environment-file: environment.yml
-          python-version: 3.8
-          auto-activate-base: false
+          fetch-depth: 0
 
       - name: Install Mantid
+        shell: bash -l {0}
         run: |
-          mamba install -c mantid mantid==6.6.0
+          conda config --set always_yes yes --set changeps1 no
+          conda create -n test-env python=3.8
+          source /usr/share/miniconda/etc/profile.d/conda.sh
+          conda activate test-env
+          conda install -c conda-forge -c mantid/label/nightly mantid
+          ulimit -c unlimited
+          python -c "
+          import sys
+          import mantid.simpleapi
+          del sys.modules['mantid.simpleapi']
+          del sys.modules['mantid']
+          del mantid.simpleapi
+          del mantid
+          "
+          sudo chmod -R +rwx /var/crash/*
 
-      - name: Test Mantid Import
-        run: python -c "from mantid import simpleapi"
+
+
+      - uses: actions/upload-artifact@master # capture all crashes as build artifacts
+        with:
+          name: crashes
+          path: /var/crash
