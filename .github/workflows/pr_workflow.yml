@@ -28,7 +28,9 @@ jobs:
           python -c "
           import sys
           import mantid.simpleapi
+          del sys.modules['mantid.simpleapi']
           del sys.modules['mantid']
+          del mantid.simpleapi
           del mantid
           "
           sudo chmod -R +rwx /var/crash/*
