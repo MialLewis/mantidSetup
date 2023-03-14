@@ -23,13 +23,7 @@ jobs:
           conda create -n test-env python=3.8
           source /usr/share/miniconda/etc/profile.d/conda.sh
           conda activate test-env
-          conda install -c conda-forge -c mantid/label/nightly mantid
-
-      - name: Test Mantid Import
-        shell: bash -l {0}
-        run: |
-          source /usr/share/miniconda/etc/profile.d/conda.sh
-          conda activate test-env
+          conda install -c conda-forge -c mantid mantid
           ulimit -c unlimited
           python -c "from mantid import simpleapi"
           sudo chmod -R +rwx /var/crash/*
