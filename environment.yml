@@ -3,7 +3,6 @@ name: mantid-setup
 channels:
   - conda-forge
   - mantid
-  - anaconda
 
 dependencies:
   - python==3.8.*
