@@ -16,18 +16,25 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup Miniconda
-        uses: conda-incubator/setup-miniconda@v2.2.0
-        with:
-          miniforge-version: latest
-          miniforge-variant: Mambaforge
-          activate-environment: mantid-setup
-          environment-file: environment.yml
-          python-version: 3.8
-          auto-activate-base: false
-
       - name: Install Mantid
-        run: conda install -c mantid/label/nightly mantid
+        shell: bash -l {0}
+        run: |
+          conda config --set always_yes yes --set changeps1 no
+          conda create -n test-env python=3.8
+          source /usr/share/miniconda/etc/profile.d/conda.sh
+          conda activate test-env
+          conda install -c conda-forge -c mantid/label/nightly mantid
 
       - name: Test Mantid Import
-        run: python -c "from mantid import simpleapi"
+        shell: bash -l {0}
+        run: |
+          source /usr/share/miniconda/etc/profile.d/conda.sh
+          conda activate test-env
+          ulimit -c unlimited
+          python -c "from mantid import simpleapi"
+          sudo chmod -R +rwx /var/crash/*
+
+      - uses: actions/upload-artifact@master # capture all crashes as build artifacts
+        with:
+          name: crashes
+          path: /var/crash
