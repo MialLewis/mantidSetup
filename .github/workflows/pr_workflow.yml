@@ -25,7 +25,12 @@ jobs:
           conda activate test-env
           conda install -c conda-forge -c mantid mantid
           ulimit -c unlimited
-          python -c "from mantid.kernel import FloatArrayProperty"
+          python -c "
+          import sys
+          import mantid.simpleapi
+          del sys.modules['mantid']
+          del mantid
+          "
           sudo chmod -R +rwx /var/crash/*
 
 
