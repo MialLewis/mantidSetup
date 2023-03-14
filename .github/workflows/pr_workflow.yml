@@ -25,8 +25,10 @@ jobs:
           conda activate test-env
           conda install -c conda-forge -c mantid mantid
           ulimit -c unlimited
-          python -c "from mantid import simpleapi"
+          python -c "from mantid.kernel import FloatArrayProperty"
           sudo chmod -R +rwx /var/crash/*
+
+
 
       - uses: actions/upload-artifact@master # capture all crashes as build artifacts
         with:
