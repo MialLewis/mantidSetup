@@ -28,7 +28,7 @@ jobs:
 
       - name: Install Mantid
         run: |
-          mamba install -c mantid mantid==6.6.0
+          mamba install -c mantid mantid==6.6.0 mantidqt
 
       - name: Test Mantid Import
         run: python -c "from mantid import simpleapi"
