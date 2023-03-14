@@ -4,5 +4,3 @@ channels:
   - conda-forge
   - mantid
 
-dependencies:
-  - python==3.8.*

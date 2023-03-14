@@ -27,8 +27,7 @@ jobs:
           auto-activate-base: false
 
       - name: Install Mantid
-        run: |
-          mamba install -c mantid mantid==6.6.0 mantidqt
+        run: conda install -c mantid/label/nightly mantid
 
       - name: Test Mantid Import
         run: python -c "from mantid import simpleapi"
