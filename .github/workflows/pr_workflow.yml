@@ -1,27 +1,21 @@
 name: mantid setup basic workflow
 
 # Controls when the workflow will run
-on:
-  # By default runs on opened, synchronize (push) and reopened
-  pull_request:
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+on: push
 
 jobs:
   test:
     runs-on: ubuntu-latest
     defaults:
       run:
-        #run in bash rather than sh
         shell: bash -l {0}
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out repo to comp that runs action (as opposed to v3, under $GITHUB_WORKSPACE)
       - name: Checkout mantidSetup
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
-      # Set up conda environnment
       - name: Setup Miniconda
         uses: conda-incubator/setup-miniconda@v2.2.0
         with:
