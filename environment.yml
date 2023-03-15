@@ -1,5 +1,6 @@
 name: mantid-setup
-
 channels:
   - conda-forge
   - mantid
+dependencies:
+  - mantid==6.6.0
